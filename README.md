@@ -1,4 +1,5 @@
 Project Title: BS PHOTOGRAPHY
+
 Project Overview:
 BS Photography is a professional photography site created to display the photographer's portfolio and provide clients with a simple, user-friendly method to schedule sessions. The platform acts as a digital presence for the business, enabling both prospective and existing clients to investigate services, check past work, and schedule appointments. The site will feature crucial e-commerce functions like secure payments, downloadable images, and customized user accounts, providing a comprehensive solution for clients' photography requirements. 
 
