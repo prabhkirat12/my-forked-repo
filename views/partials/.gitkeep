@@ -9,9 +9,68 @@
     <title>Document</title>
     <%- include('partials/header1.ejs') %>
 </head>
-
+    
 <body>
-   
+    <%- include('partials/navbar1.ejs') %>
+    <div class="bookingbg">
+        <div class="bookwrapper">
+            <div class="bookform-box login">
+                <h2>MAKE BOOKING FOR YOUR BIG DAY!</h2>
+                <form method="post">
+
+                    <div class="bookinputbox">
+                        <input type="text" placeholder="Your Name" name="name" id="name" required>
+                    </div>
+                    <div class="bookinputbox">
+                        <input type="text" placeholder="Partner's Name" name="partnername" class="partnername"
+                            required>
+                    </div>
+                    <div class="bookinputbox">
+                        <input type="email" placeholder="Enter E-mail" name="email" id="email" required>
+                    </div>
+                    <div class="bookinputbox">
+                        <select name="occasiontype" id="occasiontype" class="shoottypes" onmousemove>
+                            <option value="">Select Your Occasion</option>
+                            <option value="engagement">Engagement</option>
+                            <option value="preWedding">Pre-Wedding Shoot</option>
+                            <option value="wedding">Wedding Shoot</option>
+                            <option value="reception">Reception Shoot</option>
+                            <option value="birthday">Birthday Shoot</option>
+                            <option value="commercial">Commercial Shoot</option>
+                            <option value="fashion">Fashion Shoot</option>
+                            <option value="pet">Pet Shoot</option>
+                        </select>
+                    </div>
+                    <div class="bookinputbox">
+                        <input type="datetime-local" placeholder="Date of Occasion(if final)" name="datetime"
+                            class="datetime" id="datetime" required>
+                    </div>
+                    <!-- Address input connected to Google Maps -->
+                    <div class="bookinputbox">
+                        <input type="text" placeholder="Location of Occasion" name="address" id="address" required>
+                    </div>
+
+                    <div id="map" style="height: 400px; width: 100%;"></div>
+
+                    <div class="bookinputbox">
+                        <input type="number" placeholder="Hours of Coverage" name="hoursofshoot"
+                            class="hoursofshoot" required>
+                    </div>
+                    <div class="bookinputbox">
+                        <input type="tel" placeholder="Contact Number" name="contactnumber" class="contactnumber" required>
+                    </div>
+
+                    <!-- Hidden inputs to store latitude and longitude of map -->
+                    <input type="hidden" id="latitude" name="latitude">
+                    <input type="hidden" id="longitude" name="longitude">
+
+                    <button type="submit" class="btn" id="btnlogin">Make Your Booking</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <%- include('partials/footer.ejs') %>
 
 </body>
 
