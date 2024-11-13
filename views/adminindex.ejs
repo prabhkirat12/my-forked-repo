@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <%- include('partials/adminnav.ejs') %>
+    <h1>this is admin said</h1>
+    <form action="/adminindex" method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" required>
+        <button type="submit">Upload Image</button>
+    </form>
+    
+    <% if (msg) { %>
+        <p><%= msg %></p>
+    <% } %>
+</body>
+</html>
+
+
+<!--app.post('/auth', function(req, res) {
+    let name = req.body.name;
+    let password = req.body.password;
+    if (name && password) {
+        conn.query('SELECT * FROM users WHERE name = ?', [name], function(error, results, fields) {
+            if (error) throw error;
+            if (results.length > 0) {
+                // Compare the entered password with the hashed password
+                bcrypt.compare(password, results[0].password, function(err, result) {
+                    if (result === true) {
+                        req.session.loggedin = true;
+                        req.session.username = name;
+                        let user = results[0];
+ 
+                        // Redirect based on access level
+                        if (user.access === "tutor") {
+                            res.redirect('/tutor');
+                        } else if (user.access === "student") {
+                            res.redirect('/student');
+                        } else {
+                            res.redirect('/admin');
+                        }
+                    } else { //is match over
+                        res.send('Incorrect Username and/or Password!');
+                    }
+                });
+            } else {
+                res.send('Incorrect Username and/or Password!');
+            }
+        });
+    } else {
+        res.send('Please enter Username and Password!');
+    }
+ });-->
