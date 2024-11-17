@@ -119,6 +119,16 @@ app.post('/adminindex', (req, res) => {
   });
 });
 
+app.get('/imageview', (req, res) => {
+  conn.query('SELECT * FROM images', (err, results) => {
+      if (err) throw err;
+      res.render('imageview', {
+          images: results,
+          loggedin: req.session.loggedin
+      });
+  });
+});
+
 
 
 
