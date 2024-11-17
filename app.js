@@ -16,3 +16,26 @@ app.use(session({
     cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // Default session cookie settings
 }));
 
+app.use((req, res, next) => {
+  if (req.session.loggedin) {
+      return next();
+  }
+
+  const useremailFromCookie = req.cookies.rememberMe;
+  if (useremailFromCookie) {
+      conn.query('SELECT * FROM user WHERE id = ?', [useremailFromCookie], (error, results) => {
+          if (error) return next(error);
+          if (results.length > 0) {
+              req.session.loggedin = true;
+              req.session.userId = useremailFromCookie;
+              req.session.emails = results[0].email;
+              return next();
+          }
+          next();
+      });
+  } else {
+      next();
+  }
+});
+
+
