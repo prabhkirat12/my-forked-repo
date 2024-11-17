@@ -51,5 +51,27 @@ app.post('/login', (req, res) => {
   res.redirect('/');
 });
 
+app.post('/register', async (req, res, next) => {
+  var username = req.body.username;
+  var email = req.body.email;
+  var password = req.body.password;
+
+  try {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+
+      var sql = `INSERT INTO user (username, email, password) VALUES ("${username}", "${email}", "${hashedPassword}")`;
+      conn.query(sql, function (err, result) {
+          if (err) throw err;
+          console.log('Record inserted');
+          res.render('login');
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Server error');
+  }
+});
+
+
 
 
