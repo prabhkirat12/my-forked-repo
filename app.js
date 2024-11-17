@@ -90,6 +90,35 @@ const upload = multer({
     }
 }).single('image');
 
+app.post('/adminindex', (req, res) => {
+  upload(req, res, (err) => {
+      if (err) {
+          res.render('adminindex', {
+              msg: err,
+              loggedin: req.session.loggedin,
+          });
+      } else {
+          if (req.file == undefined) {
+              res.render('adminindex', {
+                  msg: 'No file selected!',
+                  loggedin: req.session.loggedin
+              });
+          } else {
+              var userId = req.session.userId;
+              const imagePath = `/uploads/${req.file.filename}`;
+
+              conn.query('INSERT INTO images (id, imgpath) VALUES (?, ?)', [userId, imagePath], function(err, result) {
+                  if (err) throw err;
+                  res.render('adminindex', {
+                      msg: 'Image uploaded successfully!',
+                      loggedin: req.session.loggedin
+                  });
+              });
+          }
+      }
+  });
+});
+
 
 
 
