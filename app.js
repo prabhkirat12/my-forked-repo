@@ -46,5 +46,10 @@ app.get('/login', function (req, res) { res.render("login.ejs"); });
 
 app.get('/register', function (req, res) { res.render("register"); });
 
+app.post('/login', (req, res) => {
+  req.session.loggedin = true;
+  res.redirect('/');
+});
+
 
 
