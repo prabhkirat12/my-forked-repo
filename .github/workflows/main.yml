@@ -1,0 +1,32 @@
+name: Deploy Node.js App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # Set up Docker
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v2
+
+    # Log in to your server and navigate to Photography-App
+    - name: Deploy to Server
+      uses: appleboy/ssh-action@v0.1.4
+      with:
+        host: 95.111.219.120
+        username: vaidik
+        password: <your-server-password>
+        script: |
+          cd Photography-App
+          git pull origin main
+          docker-compose down
+          docker-compose up --build -d
