@@ -24,7 +24,7 @@ jobs:
       with:
         host: 95.111.219.120
         username: vaidik
-        password: <your-server-password>
+        password: vai100dik
         script: |
           cd Photography-App
           git pull origin main
