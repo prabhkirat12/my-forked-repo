@@ -13,10 +13,30 @@ jobs:
     # Checkout the repository
     - name: Checkout Code
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Log Message
+      run: echo "Code checkout completed."
 
     # Set up Docker
     - name: Set up Docker
       uses: docker/setup-buildx-action@v2
+    - name: Log Message
+      run: echo "Docker setup completed."
+
+    # Run Tests
+    - name: Install Dependencies
+      run: npm install
+    - name: Run Unit Tests
+      run: npm test
+    - name: Log Message
+      run: echo "Unit tests completed successfully."
+
+    # Run Lint Checks
+    - name: Run Linter
+      run: npm run lint
+    - name: Log Message
+      run: echo "Lint checks completed successfully."
 
     # Log in to your server and navigate to Photography-App
     - name: Deploy to Server
@@ -26,7 +46,25 @@ jobs:
         username: vaidik
         password: vai100dik
         script: |
-          cd Photography-App
+          echo "Logging into the server..."
+          cd Photography-App || { echo "Folder not found. Cloning repository."; git clone <your-repo-url> Photography-App && cd Photography-App; }
+          echo "Pulling latest changes..."
           git pull origin main
+          echo "Stopping existing containers..."
           docker-compose down
+          echo "Building and starting containers..."
           docker-compose up --build -d
+          echo "Deployment completed successfully."
+
+    # Post-Deployment Tests
+    - name: Verify Deployment
+      uses: appleboy/ssh-action@v0.1.4
+      with:
+        host: 95.111.219.120
+        username: vaidik
+        password: <your-server-password>
+        script: |
+          echo "Checking running containers..."
+          docker ps
+          echo "Validating application response..."
+          curl -I http://localhost:30001 || { echo "Application not responding."; exit 1; }
