@@ -1,45 +1,65 @@
+version: '3.8'
 services:
-  nodejs:
-    build: 
-      context: .
-    image: amakundu/nodejs-mysql-app
-    networks:
-      - frontend
-      - backend
-    environment:
-      - MYSQL_HOST=moe-mysql-app
-      - MYSQL_USER=moeuser
-      - MYSQL_PASS=moepass
-      - MYSQL_DB=photodb
-    volumes:
-      - ./www/:/var/www/html/
-    ports:
-      - "30001:8005"
-    container_name: moe-nodejs-app
   mysql:
     image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: moeroot
+      MYSQL_DATABASE: photodb
+      MYSQL_USER: moeuser
+      MYSQL_PASSWORD: moepass
     networks:
       - backend
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_USER=moeuser
-      - MYSQL_PASSWORD=moepass 
-      - MYSQL_DATABASE=photodb
     container_name: moe-mysql-app
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:4.7
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql                # Persistent storage for MySQL data
+      - ./Database Files/photodb.sql:/docker-entrypoint-initdb.d/photodb.sql # SQL file to set up tables and data
+      - ./scripts/init-check.sh:/docker-entrypoint-initdb.d/init-check.sh # Script to check and load data
+      - ./scripts/custom-entrypoint.sh:/custom-entrypoint.sh
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+
+  nodejs:
+    build:
+      context: .
+    image: nodejs-app
+    environment:
+      DB_HOST: moe-mysql-app
+      DB_USER: root
+      DB_PASSWORD: moeroot
+      DB_NAME: photodb
     depends_on:
       - mysql
     networks:
       - backend
+      - frontend
+    container_name: moe-nodejs-app
     ports:
-      - "30002:80"
-    environment:
-      - PMA_HOST=moe-mysql-app
-      - PMA_PORT= 3306
+      - "8005:8005"
     volumes:
-      - /sessions
+      - ./www:/usr/src/app/www                # Static files for the app
+      - ./views:/usr/src/app/views            # EJS views
+      - ./public:/usr/src/app/public          # Public assets like CSS, images, and uploads
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.2
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: moe-mysql-app
+      MYSQL_ROOT_PASSWORD: moeroot
+    networks:
+      - backend
     container_name: moe-phpmyadmin-app
+    ports:
+      - "8080:80"
+
 networks:
   frontend:
   backend:
+
+volumes:
+  mysql-data:
