@@ -1,12 +1,11 @@
-version: '3.8'
 services:
   mysql:
     image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: moeroot
       MYSQL_DATABASE: photodb
-      MYSQL_USER: moeuser
-      MYSQL_PASSWORD: moepass
+      MYSQL_USER: root
+      MYSQL_PASSWORD: moeroot
     networks:
       - backend
     container_name: moe-mysql-app

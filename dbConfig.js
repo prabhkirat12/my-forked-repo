@@ -1,8 +1,8 @@
 var mysql = require('mysql');
 var conn = mysql.createConnection({
     host: 'moe-mysql-app',
-    user: 'moeuser',
-    password: 'moepass',
+    user: 'root',
+    password: 'moeroot',
     database:'photodb',
     port: 3306
 });
