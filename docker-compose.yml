@@ -54,7 +54,7 @@ services:
       - backend
     container_name: moe-phpmyadmin-app
     ports:
-      - "8080:80"
+      - "8011:80"
 
 networks:
   frontend:
