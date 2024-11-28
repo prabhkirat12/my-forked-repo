@@ -4,7 +4,7 @@ var conn = mysql.createConnection({
     user: 'root',
     password: 'moeroot',
     database:'photodb',
-    port: 3306
+    port: 3311
 });
 
 conn.connect(function(err) {

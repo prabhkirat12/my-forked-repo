@@ -10,7 +10,7 @@ services:
       - backend
     container_name: moe-mysql-app
     ports:
-      - "3306:3306"
+      - "3311:3311"
     volumes:
       - mysql-data:/var/lib/mysql                # Persistent storage for MySQL data
       - ./Database Files/photodb.sql:/docker-entrypoint-initdb.d/photodb.sql # SQL file to set up tables and data
