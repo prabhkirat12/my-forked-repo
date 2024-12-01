@@ -336,8 +336,7 @@ app.get('/imageview', (req, res) => {
         });
     });
 });
+app.listen(8005, '0.0.0.0', () => {  // Listen on all network interfaces for Docker compatibility
+    console.log('Node app is running on port 8005');
+});
 
-app.listen(8005);
-// hy
-// comment after success fully run port by node app
-console.log('Node app is running on port 8005');
