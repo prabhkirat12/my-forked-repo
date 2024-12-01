@@ -1,60 +1,45 @@
-services:
-  mysql:
-    image: mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: moeroot
-      MYSQL_DATABASE: photodb
-      MYSQL_USER: root
-      MYSQL_PASSWORD: moeroot
-    networks:
-      - backend
-    container_name: moe-mysql-app
-    ports:
-      - "3311:3311"
-    volumes:
-      - mysql-data:/var/lib/mysql                # Persistent storage for MySQL data
-      - ./Database Files/photodb.sql:/docker-entrypoint-initdb.d/photodb.sql # SQL file to set up tables and data
-      - ./scripts/init-check.sh:/docker-entrypoint-initdb.d/init-check.sh # Script to check and load data
-      - ./scripts/custom-entrypoint.sh:/custom-entrypoint.sh
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      retries: 5
+version: '3.8'
 
-  nodejs:
-    build:
-      context: .
-    image: nodejs-app
+services:
+  app:
+    image: ${{ secrets.DOCKER_USERNAME }}/photography-app:latest
+    ports:
+      - "8005:8005"  # Expose port 8005 for Node.js app
     environment:
-      DB_HOST: moe-mysql-app
-      DB_USER: root
-      DB_PASSWORD: moeroot
-      DB_NAME: photodb
+      - DB_HOST=photography-app_db_1  # Use the service name from docker-compose
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=my-secret-pw
+      - DB_NAME=photodb
     depends_on:
-      - mysql
+      - db
     networks:
       - backend
       - frontend
-    container_name: moe-nodejs-app
+
+  db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: photodb
     ports:
-      - "8005:8005"
-    volumes:
-      - ./www:/usr/src/app/www                # Static files for the app
-      - ./views:/usr/src/app/views            # EJS views
-      - ./public:/usr/src/app/public          # Public assets like CSS, images, and uploads
+      - "3307:3306"  # Expose MySQL port to the host
+    networks:
+      - backend
+    container_name: photography-app_db_1  # Ensure the container name is used as DB_HOST
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:5.2
     depends_on:
-      - mysql
+      - db
     environment:
-      PMA_HOST: moe-mysql-app
-      MYSQL_ROOT_PASSWORD: moeroot
-    networks:
-      - backend
-    container_name: moe-phpmyadmin-app
+      PMA_HOST: photography-app_db_1  # Link phpMyAdmin with the MySQL container
+      MYSQL_ROOT_PASSWORD: my-secret-pw
     ports:
       - "8011:80"
+    networks:
+      - backend
 
 networks:
   frontend:
